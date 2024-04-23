@@ -4,19 +4,27 @@ import { AppContext } from '../context/AppContext';
 const AllocationForm = (props) => {
     const { dispatch,remaining  } = useContext(AppContext);
 
+    const [currency, setCurrency] = useState('');
     const [name, setName] = useState('');
     const [cost, setCost] = useState('');
     const [action, setAction] = useState('');
 
     const submitEvent = () => {
+        
+        dispatch({
+            type: 'CHG_CURRENCY',
+            payload: currency,
+        });
 
-            if(cost > remaining) {
-                alert("The value cannot exceed remaining funds  £"+remaining);
-                setCost("");
-                return;
-            }
+        if(cost > remaining) {
+            console.log(currency)
+            alert("The value cannot exceed remaining funds  " + currency + remaining);
+            setCost("");
+            return;
+        }
 
         const expense = {
+            currency: currency,
             name: name,
             cost: parseInt(cost),
         };
@@ -38,17 +46,29 @@ const AllocationForm = (props) => {
             <div className='row'>
 
             <div className="input-group mb-3" style={{ marginLeft: '2rem' }}>
-                    <div className="input-group-prepend">
+                  <div className="input-group-prepend">
+                <label className="input-group-text" htmlFor="inputGroupSelect01">Currency</label>
+                  </div>
+                  <select className="custom-select" id="inputGroupSelect01" onChange={(event) => setCurrency(event.target.value)}>
+                    <option defaultValue>Choose...</option>
+                    <option value="$" name="dollar"> $ Dollar</option>
+                    <option value="£" name="pound">£ Pound</option>
+                    <option value="€" name="euro">€ Euro</option>
+                    <option value="₹" name="ruppee">₹ Ruppee</option>
+                  </select>
+
+                    <div className="input-group-prepend" style={{ marginLeft: '2rem' }}>
                 <label className="input-group-text" htmlFor="inputGroupSelect01">Department</label>
                   </div>
+
                   <select className="custom-select" id="inputGroupSelect01" onChange={(event) => setName(event.target.value)}>
-                        <option defaultValue>Choose...</option>
-                        <option value="Marketing" name="marketing"> Marketing</option>
-                <option value="Sales" name="sales">Sales</option>
-                <option value="Finance" name="finance">Finance</option>
-                <option value="HR" name="hr">HR</option>
-                <option value="IT" name="it">IT</option>
-                <option value="Admin" name="admin">Admin</option>
+                    <option defaultValue>Choose...</option>
+                    <option value="Marketing" name="marketing"> Marketing</option>
+                    <option value="Sales" name="sales">Sales</option>
+                    <option value="Finance" name="finance">Finance</option>
+                    <option value="HR" name="hr">HR</option>
+                    <option value="IT" name="it">IT</option>
+                    <option value="Admin" name="admin">Admin</option>
                   </select>
 
                     <div className="input-group-prepend" style={{ marginLeft: '2rem' }}>
@@ -58,13 +78,13 @@ const AllocationForm = (props) => {
                         <option defaultValue value="Add" name="Add">Add</option>
                 <option value="Reduce" name="Reduce">Reduce</option>
                   </select>
-
+                    <div style={{ marginLeft: '2rem' }}>{currency}</div>
                     <input
                         required='required'
                         type='number'
                         id='cost'
                         value={cost}
-                        style={{ marginLeft: '2rem' , size: 10}}
+                        style={{ marginLeft: '1rem' , size: 10}}
                         onChange={(event) => setCost(event.target.value)}>
                         </input>
 
